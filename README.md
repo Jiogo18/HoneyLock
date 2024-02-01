@@ -25,5 +25,40 @@ La fenêtre principale est un cadre transparent qui prend l'entièreté de l'éc
 
 ## Quitter l'application
 
-- Faire une combinaison de toûches/boutons de souris spécifique (par défaut un clic droit)
+- Réaliser une combinaison de toûches/boutons de souris spécifique.
 - Fermer la session utilisateur
+
+Par défaut il existe deux combinaisons :
+- Un clic droit
+- Insert ; O
+
+## Configuration
+
+Le fichier de configuration `config.ini` permet de définir les touches pour quitter l'application.
+Format : `<clé inutilisée> = "<suite ; de ; touches>"` dans la séction `[Combinaisons]`
+Exemple de fichier de configuration :
+
+```ini
+# Combinaisons de touches pour déverrouiller honeylock
+
+[Combinaisons]
+1 = "Alt ; P ; _"
+2 = "RightClick ; O"
+# ...
+```
+
+Une combinaison est réalisée en appuyant sur toutes les touches l'une après l'autre (seule l'appuie des touches est compté).
+
+### Touches spéciales
+
+- Clics de souris communs : LeftClick, RightClick, MiddleClick
+- Clics de souris spéciaux : `Mouse_[code dans Qt::MouseButton]`
+- Touches de clavier modifieurs : Ctrl, Alt, Shift
+- Touches de clavier communes : utilise le format de QKeySequence, une touche à la fois
+- Touches de clavier spéciales : `Key_[code dans Qt::Key]`
+
+Si une touche n'est pas reconnue, l'application ne démarre pas.
+
+Si le fichier n'existe pas ou est vide, les raccourcis par défaut sont utilisés.
+
+Les lignes commençant par `#` sont ignorées.

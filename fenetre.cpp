@@ -1,4 +1,5 @@
 #include "fenetre.h"
+#include "combinaisonParseur.h"
 #include <windows.h>
 
 TransparentFrame::TransparentFrame() : QWidget()
@@ -19,6 +20,36 @@ TransparentFrame::TransparentFrame() : QWidget()
 
     hWnd = (HWND)QWidget::winId();
     raise(); // lock foreground
+
+    // Chargement des combinaisons de déverrouillage
+    QString fichier = "config.ini";
+    try {
+        QSettings settings(fichier, QSettings::IniFormat);
+        
+        CombinaisonParseur parseur(settings);
+        combinaisonsDeverrouillage = parseur.getCombinaisons();
+        qDebug() << "Combinaisons : " << combinaisonsDeverrouillage;
+
+    } catch(QString e) {
+        qDebug() << "Impossible de lire le fichier de configuration " << fichier << " : " << e;
+        exit(1);
+    }
+    touchesAppuyees = QList<int>();
+
+    // Combinaisons par défaut
+    if(combinaisonsDeverrouillage.isEmpty()) {
+        Combinaison combinaisonSecurite({Qt::MouseButton::RightButton});
+        combinaisonsDeverrouillage.append(combinaisonSecurite);
+        Combinaison combinaisonSecurite2({Qt::Key::Key_Insert, Qt::Key::Key_O});
+        combinaisonsDeverrouillage.append(combinaisonSecurite2);
+    }
+
+    // Permet de déterminer le nombre de touches maximum à garder en mémoire
+    for(const Combinaison &combinaison : combinaisonsDeverrouillage) {
+        if(combinaison.size() > longueurCombinaisonMax) {
+            longueurCombinaisonMax = combinaison.size();
+        }
+    }
 }
 
 bool TransparentFrame::isActiveWindow() const
@@ -47,6 +78,7 @@ void TransparentFrame::keyPressEvent(QKeyEvent *event)
     default:
         break;
     }
+    toucheAppuyee(event->key());
 }
 
 void TransparentFrame::keyReleaseEvent(QKeyEvent *event)
@@ -57,14 +89,7 @@ void TransparentFrame::keyReleaseEvent(QKeyEvent *event)
 void TransparentFrame::mousePressEvent(QMouseEvent *event)
 {
     qDebug() << "mouse press event" << event->button();
-    switch(event->button()) {
-    case Qt::RightButton:
-        allowCloseEvent = true;
-        exit(0);
-        break;
-    default:
-        break;
-    }
+    toucheAppuyee(event->button());
 }
 
 void TransparentFrame::mouseReleaseEvent(QMouseEvent *event)
@@ -108,5 +133,19 @@ void TransparentFrame::focusTimeout()
         mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
         // Fenêtres spéciales (gestionnaire des tâches)
         raise();
+    }
+}
+
+void TransparentFrame::toucheAppuyee(int touche)
+{
+    touchesAppuyees.push_back(touche);
+    if(touchesAppuyees.size() > longueurCombinaisonMax) {
+        touchesAppuyees.pop_front();
+    }
+    for(const Combinaison &combinaison : combinaisonsDeverrouillage) {
+        if(combinaison.match(touchesAppuyees)) {
+            allowCloseEvent = true;
+            exit(0);
+        }
     }
 }

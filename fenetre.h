@@ -7,6 +7,7 @@
 #include <QCloseEvent>
 #include <QTimer>
 #include <QTime>
+#include "combinaison.h"
 
 /**
  * Fenêtre transparente, mais empêchant toute utilisation de l'ordinateur.
@@ -57,11 +58,15 @@ private slots:
      * @brief Vérifie que l'application a le focus
      */
     void focusTimeout();
+    void toucheAppuyee(int touche);
 
 private:
     bool allowCloseEvent = false;
     HWND hWnd;
     QTimer *timerFocus;
+    QList<Combinaison> combinaisonsDeverrouillage;
+    QList<int> touchesAppuyees;
+    int longueurCombinaisonMax = 0;
 };
 
 #endif // FENETRE_H
