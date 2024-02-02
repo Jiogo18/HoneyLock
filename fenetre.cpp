@@ -72,6 +72,7 @@ void TransparentFrame::closeEvent(QCloseEvent *event)
         timerFocus->stop();
     } else {
         event->ignore();
+        actionSuspecte(10);
     }
 }
 
