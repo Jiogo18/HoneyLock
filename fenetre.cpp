@@ -34,6 +34,7 @@ TransparentFrame::TransparentFrame() : QWidget()
         settings.beginGroup("Contre-mesures");
         paramDelaiArretSuspicion = settings.value("delaiArretSuspicion", 10000).toInt();
         paramNombreSuspicionsMax = settings.value("nombreSuspicions", 100).toInt();
+        paramSingleContreMesure = settings.value("activateOnlyOneTime", true).toBool();
         commandeContreMesure = settings.value("commandeContreMesure", "").toString();
         settings.endGroup();
 
@@ -173,6 +174,9 @@ void TransparentFrame::actionSuspecte(int poids)
             qDebug() << "Lancement des contres mesures !";
             QProcess::startDetached("pwsh.exe", QStringList() << "-Command" << commandeContreMesure);
             nombreActionsSuspectes = 0;
+            if(paramSingleContreMesure) {
+                paramDelaiArretSuspicion = 0; // court-circuit pour ne pas relancer de commande
+            }
         }
     }
 

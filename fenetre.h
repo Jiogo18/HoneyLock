@@ -73,6 +73,7 @@ private:
     // Contres mesures
     int paramDelaiArretSuspicion;
     int paramNombreSuspicionsMax;
+    bool paramSingleContreMesure;
     QString commandeContreMesure;
     QTime tempsPremiereActionSuspecte;
     QTime tempsDerniereActionSuspecte;
