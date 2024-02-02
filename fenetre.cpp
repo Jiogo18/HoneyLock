@@ -23,7 +23,7 @@ TransparentFrame::TransparentFrame() : QWidget()
     raise(); // lock foreground
 
     // Chargement des combinaisons de déverrouillage
-    QString fichier = "config.ini";
+    QString fichier = "honeylock.ini";
     try {
         QSettings settings(fichier, QSettings::IniFormat);
         

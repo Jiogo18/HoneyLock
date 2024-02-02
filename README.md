@@ -34,7 +34,7 @@ Par défaut il existe deux combinaisons :
 
 ## Configuration
 
-Le fichier de configuration `config.ini` permet de définir les touches pour quitter l'application.
+Le fichier de configuration `honeylock.ini` permet de définir les touches pour quitter l'application.
 Format : `<clé inutilisée> = "<suite ; de ; touches>"` dans la séction `[Combinaisons]`
 Exemple de fichier de configuration :
 
