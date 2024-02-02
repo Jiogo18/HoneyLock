@@ -45,6 +45,12 @@ Exemple de fichier de configuration :
 1 = "Alt ; P ; _"
 2 = "RightClick ; O"
 # ...
+
+[Contre-mesures]
+
+delaiArretSuspicion = 10000
+nombreSuspicions = 100
+commandeContreMesure = "[Console]::Beep()" # exécuté avec pwsh.exe
 ```
 
 Une combinaison est réalisée en appuyant sur toutes les touches l'une après l'autre (seule l'appuie des touches est compté).
@@ -62,3 +68,11 @@ Si une touche n'est pas reconnue, l'application ne démarre pas.
 Si le fichier n'existe pas ou est vide, les raccourcis par défaut sont utilisés.
 
 Les lignes commençant par `#` sont ignorées.
+
+### Contre-mesures
+
+Les contre-mesures sont des actions réalisées lorsque l'application détecte une tentative de déverrouillage non autorisée.
+
+- `delaiArretSuspicion` : délai en millisecondes pour réinitialiser le compteur de suspicion
+- `nombreSuspicions` : nombre de tentatives de déverrouillage non autorisées avant de déclencher la contre-mesure. Actuellement seul les actions de menu démarrer et de changement de fenêtre sont comptées et comptent pour 10 suspicions.
+- `commandeContreMesure` : commande à exécuter lorsque la contre-mesure est déclenchée. La commande est exécutée avec pwsh.exe.

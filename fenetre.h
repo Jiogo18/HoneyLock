@@ -59,14 +59,24 @@ private slots:
      */
     void focusTimeout();
     void toucheAppuyee(int touche);
+    void actionSuspecte(int poids);
 
 private:
     bool allowCloseEvent = false;
     HWND hWnd;
+
     QTimer *timerFocus;
     QList<Combinaison> combinaisonsDeverrouillage;
     QList<int> touchesAppuyees;
     int longueurCombinaisonMax = 0;
+
+    // Contres mesures
+    int paramDelaiArretSuspicion;
+    int paramNombreSuspicionsMax;
+    QString commandeContreMesure;
+    QTime tempsPremiereActionSuspecte;
+    QTime tempsDerniereActionSuspecte;
+    int nombreActionsSuspectes = 0;
 };
 
 #endif // FENETRE_H

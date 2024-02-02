@@ -1,6 +1,7 @@
 #include "fenetre.h"
 #include "combinaisonParseur.h"
 #include <windows.h>
+#include <QProcess>
 
 TransparentFrame::TransparentFrame() : QWidget()
 {
@@ -29,6 +30,12 @@ TransparentFrame::TransparentFrame() : QWidget()
         CombinaisonParseur parseur(settings);
         combinaisonsDeverrouillage = parseur.getCombinaisons();
         qDebug() << "Combinaisons : " << combinaisonsDeverrouillage;
+
+        settings.beginGroup("Contre-mesures");
+        paramDelaiArretSuspicion = settings.value("delaiArretSuspicion", 10000).toInt();
+        paramNombreSuspicionsMax = settings.value("nombreSuspicions", 100).toInt();
+        commandeContreMesure = settings.value("commandeContreMesure", "").toString();
+        settings.endGroup();
 
     } catch(QString e) {
         qDebug() << "Impossible de lire le fichier de configuration " << fichier << " : " << e;
@@ -74,6 +81,7 @@ void TransparentFrame::keyPressEvent(QKeyEvent *event)
     switch(event->key()) {
     case Qt::Key::Key_Meta:
         sendClavier(VK_ESCAPE); // Annule l'ouverture du menu démarrer
+        actionSuspecte(10);
         break;
     default:
         break;
@@ -133,6 +141,7 @@ void TransparentFrame::focusTimeout()
         mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
         // Fenêtres spéciales (gestionnaire des tâches)
         raise();
+        actionSuspecte(10);
     }
 }
 
@@ -148,4 +157,24 @@ void TransparentFrame::toucheAppuyee(int touche)
             exit(0);
         }
     }
+}
+
+void TransparentFrame::actionSuspecte(int poids)
+{
+    qDebug() << "Action suspecte";
+    QTime now = QTime::currentTime();
+    if(tempsDerniereActionSuspecte.msecsTo(now) >= paramDelaiArretSuspicion) {
+        nombreActionsSuspectes = 0;
+        tempsPremiereActionSuspecte = now;
+    }
+    else {
+        nombreActionsSuspectes += poids;
+        if(nombreActionsSuspectes >= paramNombreSuspicionsMax) {
+            qDebug() << "Lancement des contres mesures !";
+            QProcess::startDetached("pwsh.exe", QStringList() << "-Command" << commandeContreMesure);
+            nombreActionsSuspectes = 0;
+        }
+    }
+
+    tempsDerniereActionSuspecte = now;
 }
