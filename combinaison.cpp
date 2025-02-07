@@ -17,8 +17,10 @@ bool Combinaison::match(QList<int> touches) const
     if(touches.size() < combinaisonTouches.size()) {
         return false;
     }
+    // Vérifier la correspondance entre combinaisonTouches et la fin de touches
+    const int offsetTouches = touches.size() - combinaisonTouches.size();
     for(int i = 0; i < combinaisonTouches.size(); i++) {
-        if(touches[i] != combinaisonTouches[i]) {
+        if(touches[i + offsetTouches] != combinaisonTouches[i]) {
             return false;
         }
     }
