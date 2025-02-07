@@ -53,7 +53,7 @@ TransparentFrame::TransparentFrame() : QWidget()
     }
 
     // Permet de déterminer le nombre de touches maximum à garder en mémoire
-    for(const Combinaison &combinaison : combinaisonsDeverrouillage) {
+    for(const Combinaison &combinaison : std::as_const(combinaisonsDeverrouillage)) {
         if(combinaison.size() > longueurCombinaisonMax) {
             longueurCombinaisonMax = combinaison.size();
         }
@@ -153,7 +153,7 @@ void TransparentFrame::toucheAppuyee(int touche)
     if(touchesAppuyees.size() > longueurCombinaisonMax) {
         touchesAppuyees.pop_front();
     }
-    for(const Combinaison &combinaison : combinaisonsDeverrouillage) {
+    for(const Combinaison &combinaison : std::as_const(combinaisonsDeverrouillage)) {
         if(combinaison.match(touchesAppuyees)) {
             allowCloseEvent = true;
             exit(0);
