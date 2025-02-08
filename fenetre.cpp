@@ -114,6 +114,13 @@ void TransparentFrame::mouseMoveEvent(QMouseEvent *event)
     SetCursorPos(100000, 500);
 }
 
+void TransparentFrame::changeEvent(QEvent *event)
+{
+    if(event->type() == QEvent::ActivationChange && !isActiveWindow()) {
+        raise();
+    }
+}
+
 void TransparentFrame::raise()
 {
     // Permet de récupérer le focus dans le cas d'une nouvelle app ouverte

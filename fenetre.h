@@ -43,6 +43,7 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void changeEvent(QEvent *event);
 
 private slots:
     /**
