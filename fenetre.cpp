@@ -109,9 +109,15 @@ void TransparentFrame::mouseReleaseEvent(QMouseEvent *event)
 
 void TransparentFrame::mouseMoveEvent(QMouseEvent *event)
 {
-    // Fixe la souris à droite de l'écran pour ne pas faire de dégâts
+    // Bloque la souris au milieu de la fenêtre pour ne pas faire de dégâts
     Q_UNUSED(event)
-    SetCursorPos(100000, 500);
+    SetCursorPos(positionSouris.x(), positionSouris.y());
+}
+
+void TransparentFrame::moveEvent(QMoveEvent *event)
+{
+    Q_UNUSED(event)
+    positionSouris = geometry().center();
 }
 
 void TransparentFrame::changeEvent(QEvent *event)

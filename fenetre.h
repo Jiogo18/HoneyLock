@@ -44,6 +44,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void changeEvent(QEvent *event);
+    void moveEvent(QMoveEvent *event);
 
 private slots:
     /**
@@ -70,6 +71,7 @@ private:
     QList<Combinaison> combinaisonsDeverrouillage;
     QList<int> touchesAppuyees;
     int longueurCombinaisonMax = 0;
+    QPoint positionSouris;
 
     // Contres mesures
     int paramDelaiArretSuspicion;
